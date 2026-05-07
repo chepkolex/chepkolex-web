@@ -1,39 +1,86 @@
 ﻿import { NextResponse } from 'next/server';
 import { GoogleGenerativeAI } from "@google/generative-ai";
+import { db } from '@/lib/firebase'; 
+import { collection, addDoc, serverTimestamp, doc, getDoc } from 'firebase/firestore';
+import { runExecutionEngine } from '@/lib/execution-engine';
+
+const genAI = new GoogleGenerativeAI(process.env.NEXT_PUBLIC_GEMINI_API_KEY);
 
 export async function POST(req) {
+  // 🔐 Security: Define Allowed Origins
+  const origin = req.headers.get('origin');
+  const allowedOrigins = [
+    "https://chepkolex-web.vercel.app", 
+    "https://chepkolex-ai.vercel.app" // Ensure no trailing slash for exact matching
+  ];
+  
+  const isAllowed = allowedOrigins.includes(origin);
+
+  if (process.env.NODE_ENV === 'production' && !isAllowed) {
+    return new NextResponse(null, { status: 403 });
+  }
+
   try {
-    const { service, input } = await req.json();
-    
-    // 1. Initialize Gemini
-    const genAI = new GoogleGenerativeAI(process.env.NEXT_PUBLIC_GEMINI_API_KEY);
+    const { service, userId, input } = await req.json();
+
+    // 1. Context Injection (Fetch Business DNA)
+    // Silently pulls context for personalization
+    const dnaRef = doc(db, "business_dna", userId || "global");
+    const dnaSnap = await getDoc(dnaRef);
+    const businessContext = dnaSnap.exists() ? dnaSnap.data().context : "General digital operator";
+
+    // 2. Initialize Gemini Model
     const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
-    // 2. Generate the Strategy
-    const prompt = `You are the Chepkolex AI Digital Operator. 
-    Task: ${input} for service: ${service}.
-    Provide a 3-step execution plan and a detailed technical result.
-    Return JSON format: { "plan": ["step1", "step2", "step3"], "result": "detailed text here" }`;
+    // 3. Trigger External Execution Engine Logic
+    // This uses the modular library we created earlier
+    const engineOutput = await runExecutionEngine(model, service, input, businessContext);
 
-    const result = await model.generateContent(prompt);
-    const text = result.response.text();
-    
-    // 3. Parse and Send (Ensuring it matches your frontend state)
-    const cleanData = JSON.parse(text.replace(/```json|```/g, ""));
-
-    return NextResponse.json(cleanData, {
-      headers: {
-        'Access-Control-Allow-Origin': '*', // Or your specific frontend URL
-        'Access-Control-Allow-Methods': 'POST, OPTIONS',
-        'Access-Control-Allow-Headers': 'Content-Type',
-      }
+    // 4. Firebase Write (Triggers real-time dashboard updates)
+    const docRef = await addDoc(collection(db, "service_requests"), {
+      userId: userId || "anonymous",
+      service,
+      input,
+      result: engineOutput.result,
+      plan: engineOutput.plan,
+      status: "executed",
+      timestamp: serverTimestamp(),
+      operator: "Chepkolex-V1"
     });
 
+    // 5. Response to Frontend
+    const response = NextResponse.json({ 
+      success: true, 
+      requestId: docRef.id, 
+      ...engineOutput 
+    });
+
+    // Set CORS headers dynamically
+    if (origin && (isAllowed || process.env.NODE_ENV !== 'production')) {
+      response.headers.set('Access-Control-Allow-Origin', origin);
+      response.headers.set('Access-Control-Allow-Methods', 'POST, OPTIONS');
+      response.headers.set('Access-Control-Allow-Headers', 'Content-Type');
+    }
+
+    return response;
+
   } catch (error) {
-    console.error("Backend Error:", error);
-    return NextResponse.json(
-      { error: "Operator logic failed. Check API keys and JSON parsing." }, 
-      { status: 500 }
-    );
+    console.error("Chepkolex API Error:", error);
+    return NextResponse.json({ 
+      error: "Service execution failed",
+      details: error.message 
+    }, { status: 500 });
   }
+}
+
+// Handle OPTIONS for preflight requests
+export async function OPTIONS() {
+  return new NextResponse(null, {
+    status: 204,
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': 'POST, OPTIONS',
+      'Access-Control-Allow-Headers': 'Content-Type',
+    },
+  });
 }
