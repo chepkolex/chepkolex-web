@@ -1,3 +1,1 @@
-﻿export default function Services() {
-  return <div className="hidden">Services Module Placeholder</div>;
-}
+export default function Services() { return null; }
