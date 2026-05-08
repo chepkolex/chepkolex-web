@@ -1,7 +1,6 @@
 ﻿import { NextResponse } from 'next/server';
 import { GoogleGenerativeAI } from "@google/generative-ai";
-import { db } from '@/lib/firebase'; 
-import { collection, addDoc, serverTimestamp, doc, getDoc } from 'firebase/firestore';
+import { db } from '@/lib/firebaseadmin'; // Points to your admin initialization
 import { runExecutionEngine } from '@/lib/execution-engine';
 
 const genAI = new GoogleGenerativeAI(process.env.NEXT_PUBLIC_GEMINI_API_KEY);
@@ -22,26 +21,28 @@ export async function POST(req) {
   try {
     const { service, userId, input } = await req.json();
 
-    // 1. Context Injection
-    const dnaRef = doc(db, "business_dna", userId || "global");
-    const dnaSnap = await getDoc(dnaRef);
-    const businessContext = dnaSnap.exists() ? dnaSnap.data().context : "General digital operator";
+    // 1. Context Injection (Firebase Admin Syntax)
+    // Silently retrieves business context for personalization
+    const dnaDoc = await db.collection("business_dna").doc(userId || "global").get();
+    const businessContext = dnaDoc.exists ? dnaDoc.data().context : "General digital operator";
 
     // 2. Initialize Model
     const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
     // 3. Execution Engine (Modular Logic)
+    // Uses the modular dispatcher for specialized processing
     const engineOutput = await runExecutionEngine(model, service, input, businessContext);
 
-    // 4. Firebase Write
-    const docRef = await addDoc(collection(db, "service_requests"), {
+    // 4. Firebase Write (Firebase Admin Syntax)
+    // Triggers real-time dashboard updates by logging requests
+    const docRef = await db.collection("service_requests").add({
       userId: userId || "anonymous",
       service,
       input,
       result: engineOutput.result,
       plan: engineOutput.plan,
       status: "executed",
-      timestamp: serverTimestamp(),
+      timestamp: new Date(), // Admin SDK natively handles JS Date objects
       operator: "Chepkolex-V1"
     });
 
