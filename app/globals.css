@@ -1,14 +1,8 @@
 @import "tailwindcss";
 
 :root {
-  /* Force the B-OK deep black theme */
-  --background: #030303;
-  --foreground: #ffffff;
-  
-  /* Sidebar and Card Accents */
-  --sidebar: #050505;
-  --card: #0f0f0f;
-  --border: rgba(255, 255, 255, 0.05);
+  --background: #ffffff;
+  --foreground: #171717;
 }
 
 @theme inline {
@@ -18,39 +12,15 @@
   --font-mono: var(--font-geist-mono);
 }
 
-/* Remove default browser styles and force the dark theme */
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
-  overflow-x: hidden;
-}
-
-/* Custom Scrollbar to match the sleek dashboard look */
-::-webkit-scrollbar {
-  width: 6px;
-}
-
-::-webkit-scrollbar-track {
-  background: #030303;
-}
-
-::-webkit-scrollbar-thumb {
-  background: #222;
-  border-radius: 10px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: #333;
-}
-
-/* Smooth Input Focus for the Chat bar */
-input:focus {
-  outline: none;
+  font-family: Arial, Helvetica, sans-serif;
 }

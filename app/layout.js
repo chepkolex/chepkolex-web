@@ -22,15 +22,7 @@ export default function RootLayout({ children }) {
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="h-full bg-[#030303] text-white">
-        {/* 
-            This div ensures that the sidebar and page content 
-            fill the screen correctly as seen in Image B.
-        */}
-        <div className="flex h-full w-full overflow-hidden">
-          {children}
-        </div>
-      </body>
+      <body className="min-h-full flex flex-col">{children}</body>
     </html>
   );
 }
