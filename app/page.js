@@ -1,53 +1,69 @@
 ﻿"use client";
 import Sidebar from '@/components/Dashboard/Sidebar';
-import { PenTool, AlignLeft, Lightbulb, Code2, Briefcase, Megaphone, Paperclip, Send } from 'lucide-react';
+import { FileUp, Send } from 'lucide-react';
 import { useState } from 'react';
+import Services from '@/components/Services'; // Using the directory path you specified
 
 export default function Home() {
   const [input, setInput] = useState("");
-  const actions = [
-    { title: "Write a Blog Post", icon: <PenTool className="text-blue-400" /> },
-    { title: "Summarize Text", icon: <AlignLeft className="text-green-400" /> },
-    { title: "Generate Ideas", icon: <Lightbulb className="text-yellow-400" /> },
-    { title: "Code Assistant", icon: <Code2 className="text-purple-400" /> },
-    { title: "Business Plan", icon: <Briefcase className="text-orange-400" /> },
-    { title: "Marketing Copy", icon: <Megaphone className="text-pink-400" /> },
-  ];
 
   return (
-    <div className="flex h-screen bg-[#030303] text-zinc-400 overflow-hidden">
+    <div className="flex h-screen bg-[#030303] text-zinc-400 overflow-hidden font-sans">
       <Sidebar />
-      <main className="flex-1 flex flex-col items-center justify-center p-8 relative">
-        <div className="text-center mb-16 relative z-10">
-          <h2 className="text-5xl md:text-6xl font-bold text-white mb-6">
-            Hello, <span className="text-purple-500">Chepkolex!</span> 👋
-          </h2>
-          <p className="text-zinc-500 text-lg md:text-xl">
-            Your AI-powered assistant for business, code, and creative growth.
-          </p>
-        </div>
+      
+      <main className="flex-1 flex flex-col items-center p-8 relative">
+        {/* Main Content Area - Centered vertically and horizontally */}
+        <div className="flex-1 flex flex-col items-center justify-center w-full max-w-5xl">
+          
+          {/* Hero Header */}
+          <div className="text-center mb-12">
+            <h2 className="text-6xl font-bold text-white mb-4 tracking-tight">
+              Hello, <span className="text-purple-500">Chepkolex!</span> 👋
+            </h2>
+            <p className="text-zinc-500 text-xl font-medium">
+              Your AI-powered assistant for business, code, and creative growth.
+            </p>
+          </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 w-full max-w-4xl mb-12">
-          {actions.map((a, i) => (
-            <div key={i} className="p-5 bg-zinc-900/40 border border-zinc-800/60 rounded-2xl hover:border-zinc-700 transition-all cursor-pointer group">
-              <div className="mb-4 group-hover:scale-110 transition-transform">{a.icon}</div>
-              <h4 className="text-white text-sm font-semibold">{a.title}</h4>
+          {/* Action Grid (from Services.jsx) */}
+          <Services />
+
+          {/* Chat Input Area */}
+          <div className="w-full max-w-4xl relative group">
+            {/* Subtle Outer Glow on Focus */}
+            <div className="absolute -inset-0.5 bg-gradient-to-r from-purple-500/10 to-blue-500/10 rounded-2xl blur opacity-0 group-focus-within:opacity-100 transition duration-1000"></div>
+            
+            <div className="relative bg-[#0f0f0f] border border-zinc-800 rounded-2xl p-3 flex items-center gap-3 shadow-2xl transition-all group-focus-within:border-zinc-700">
+              <button className="p-3 text-zinc-500 hover:text-white transition-colors">
+                <FileUp size={22} />
+              </button>
+              
+              <input 
+                type="text" 
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                placeholder="Ask Chepkolex anything..." 
+                className="flex-1 bg-transparent border-none focus:ring-0 text-white text-base py-3 placeholder:text-zinc-600" 
+              />
+              
+              <button 
+                className={`p-3 rounded-xl transition-all duration-300 ${
+                  input 
+                  ? 'bg-purple-600 text-white shadow-lg shadow-purple-500/20' 
+                  : 'bg-zinc-800/50 text-zinc-600'
+                }`}
+              >
+                <Send size={20} />
+              </button>
             </div>
-          ))}
+          </div>
         </div>
 
-        <div className="w-full max-w-4xl bg-[#0f0f0f] border border-zinc-800 rounded-2xl p-2 flex items-center gap-2 shadow-2xl focus-within:border-purple-500/50 transition-all">
-          <button className="p-3 text-zinc-500 hover:text-white"><Paperclip size={20} /></button>
-          <input 
-            type="text" 
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            placeholder="Ask Chepkolex anything..." 
-            className="flex-1 bg-transparent border-none focus:ring-0 text-white text-sm py-3" 
-          />
-          <button className={`p-3 rounded-xl transition-all ${input ? 'bg-purple-600 text-white' : 'bg-zinc-800 text-zinc-500'}`}>
-            <Send size={18} />
-          </button>
+        {/* Global Footer - Powered by Chepkolex AI */}
+        <div className="py-6 w-full text-center">
+          <p className="text-[10px] text-zinc-600 font-bold tracking-[0.4em] uppercase">
+            Powered by Chepkolex AI V1.0
+          </p>
         </div>
       </main>
     </div>

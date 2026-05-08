@@ -1,19 +1,25 @@
-﻿import { FileText, Cpu, MessageSquare, Activity } from 'lucide-react';
+﻿import { PenTool, AlignLeft, Lightbulb, Code2, Briefcase, Megaphone } from 'lucide-react';
 
 export default function Services() {
-  const services = [
-    { title: "AI Automation", desc: "Autonomous reports.", icon: <FileText className="text-blue-500" /> },
-    { title: "Chatbots", desc: "NLP customer service.", icon: <MessageSquare className="text-blue-500" /> },
-    { title: "Data Flow", desc: "Real-time metrics.", icon: <Activity className="text-blue-500" /> }
+  const actions = [
+    { title: "Write a Blog Post", icon: <PenTool className="text-blue-400" /> },
+    { title: "Summarize Text", icon: <AlignLeft className="text-green-400" /> },
+    { title: "Generate Ideas", icon: <Lightbulb className="text-yellow-400" /> },
+    { title: "Code Assistant", icon: <Code2 className="text-purple-400" /> },
+    { title: "Business Plan", icon: <Briefcase className="text-orange-400" /> },
+    { title: "Marketing Copy", icon: <Megaphone className="text-pink-400" /> },
   ];
 
   return (
-    <div className="max-w-7xl mx-auto grid md:grid-cols-3 gap-8 px-6">
-      {services.map((s, i) => (
-        <div key={i} className="bg-zinc-900/50 p-8 rounded-3xl border border-white/5 hover:border-blue-500/40 transition-all">
-          <div className="mb-4">{s.icon}</div>
-          <h3 className="text-xl font-bold mb-2">{s.title}</h3>
-          <p className="text-zinc-400 text-sm">{s.desc}</p>
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 w-full mb-16">
+      {actions.map((a, i) => (
+        <div key={i} className="p-8 bg-[#0f0f0f]/50 border border-zinc-800/40 rounded-3xl hover:border-zinc-700 transition-all cursor-pointer group">
+          <div className="mb-4 group-hover:scale-110 transition-transform duration-300">
+            {a.icon}
+          </div>
+          <h4 className="text-white text-base font-bold tracking-tight">
+            {a.title}
+          </h4>
         </div>
       ))}
     </div>

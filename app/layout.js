@@ -14,6 +14,8 @@ const geistMono = Geist_Mono({
 export const metadata = {
   title: "Chepkolex AI | Intelligent Execution",
   description: "Advanced AI-powered assistant for business, code, and creative growth.",
+  keywords: ["AI automation", "Business intelligence", "Full-stack development", "Chepkolex AI"],
+  authors: [{ name: "Denis Kipkoech" }],
 };
 
 export default function RootLayout({ children }) {
@@ -22,7 +24,9 @@ export default function RootLayout({ children }) {
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="h-full bg-[#030303] text-white selection:bg-purple-500/30">
+        {children}
+      </body>
     </html>
   );
 }
