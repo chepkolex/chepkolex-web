@@ -1,6 +1,6 @@
 ﻿import { NextResponse } from 'next/server';
 import { GoogleGenerativeAI } from "@google/generative-ai";
-import { db } from '@/lib/firebaseadmin'; // Points to your admin initialization
+import { db } from '@/lib/firebaseAdmin'; // Points to your admin initialization
 import { runExecutionEngine } from '@/lib/execution-engine';
 
 const genAI = new GoogleGenerativeAI(process.env.NEXT_PUBLIC_GEMINI_API_KEY);
