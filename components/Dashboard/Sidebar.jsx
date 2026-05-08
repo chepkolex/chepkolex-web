@@ -12,18 +12,15 @@ export default function Sidebar() {
 
   return (
     <aside className="w-72 border-r border-zinc-800/50 flex flex-col bg-[#050505] p-6 h-full hidden md:flex">
-      {/* Brand Logo */}
       <div className="flex items-center gap-2 mb-10 px-2">
         <div className="w-3 h-3 rounded-full bg-purple-500 shadow-[0_0_10px_rgba(168,85,247,0.5)]" />
-        <h1 className="text-xl font-bold text-purple-500 tracking-tight italic">Chepkolex AI</h1>
+        <h1 className="text-xl font-bold text-white tracking-tight italic">Chepkolex AI</h1>
       </div>
 
-      {/* New Chat Button */}
       <button className="flex items-center justify-center gap-2 w-full py-3 bg-zinc-900 border border-zinc-800 rounded-xl mb-8 text-white text-sm font-medium hover:bg-zinc-800 transition-all">
         <Plus size={16} /> New Chat
       </button>
 
-      {/* Navigation */}
       <nav className="flex-1 space-y-1">
         {items.map((item) => (
           <div key={item.name} className={`flex items-center justify-between px-4 py-3 rounded-xl cursor-pointer transition-all ${item.active ? 'bg-zinc-900 text-white border border-zinc-800' : 'text-zinc-500 hover:bg-zinc-900/50'}`}>
@@ -36,7 +33,6 @@ export default function Sidebar() {
         ))}
       </nav>
 
-      {/* Upgrade to Pro Section */}
       <div className="mt-auto p-5 bg-gradient-to-br from-purple-900/20 to-indigo-900/20 border border-purple-500/20 rounded-2xl mb-6">
         <h3 className="text-sm font-bold text-white mb-1">Upgrade to Pro</h3>
         <p className="text-[10px] text-zinc-500 mb-4 leading-relaxed">Get unlimited GPT-4 access</p>
@@ -45,13 +41,12 @@ export default function Sidebar() {
         </button>
       </div>
 
-      {/* User Profile Footer (Restored) */}
       <div className="flex items-center gap-3 p-2 border-t border-zinc-800/50 pt-6">
         <div className="w-10 h-10 rounded-xl bg-zinc-900 border border-zinc-800 flex items-center justify-center text-zinc-400">
           <User size={20} />
         </div>
-        <div className="flex-1">
-          <h4 className="text-xs font-bold text-white">Chepkolex</h4>
+        <div className="flex-1 text-left">
+          <h4 className="text-xs font-bold text-white uppercase tracking-wider">Chepkolex</h4>
           <p className="text-[10px] text-zinc-500">Premium Plan</p>
         </div>
       </div>
